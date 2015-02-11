@@ -37,7 +37,6 @@ var request = http.request(getOptions, function (response) {
 
 request.end()
 
-
 var sendImageToHook = function (url) {
   var date = new Date()
   var imageMarkdown = "![" + date.toDateString() + "](" + url + ")"
