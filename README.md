@@ -1,9 +1,16 @@
-BearyChat 机器人小卖铺
-======================
+Ollivanders - BearyChat 机器人小卖铺
+==================================
 
-BearyChat 的自定义机器人可以接受外部发过来的信息，所以稍有定制配合定时任务，就可以实现很多有意思的想法。
+Ollivanders 名字来自 《Harry Potter》魔法世界里著名的魔杖商店 [Ollivanders](http://harrypotter.wikia.com/wiki/Ollivanders)， 哈利波特在这里买到了他第一把魔杖。
 
-这里做一个代码实现的汇总，大家可以随意取用。 欢迎各种 Pull Request，请在代码的注释里说明用途。
+这个项目收集各种机器人创意和具体实现，你可以自己直接按照说明和代码把这些功能添加到自己的机器人里。
 
-有想法先讨论一下，直接发 issue 就可以
+BearyChat 机器主要分为两大类 Incoming 和 Outgoing：
 
+1. Incoming 类机器人是外部往 BearyChat 发送消息，适合于外部通知，比如告警信息，也可以适用于各种定时脚本每日报表之类的需求。
+2. Outgoing 类机器人是把触发了关键词的 BearyChat 消息发送到外部，并将结果返回或不返回。适用于查询信息，或者是对外部服务进行操作。
+
+具体的设置的细节可以看这里参考 [创造你的 BearyChat 机器人](http://bearyinnovative.com/customize-bearychat-robots/)
+
+
+_BearyChat 的内部项目命名也全部来自《Harry Potter》系列_
