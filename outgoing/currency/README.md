@@ -21,4 +21,4 @@
 
 ![screenshot](currency.png)
 
-(现在 webscript.io 提供 7 天免费试用，如果你不想付费可以使用我部署的脚本 http://loddit.webscript.io/currency 这个脚本会和这里的代码保持同步)
+(现在 webscript.io 提供 7 天免费试用，如果你不想付费可以使用我部署的脚本做为 POST 地址  http://loddit.webscript.io/currency 这个脚本会和这里的代码保持同步)
