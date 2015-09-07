@@ -1,0 +1,103 @@
+#! /bin/bash
+### BEGIN INIT INFO
+# Provides:     bearybots-api
+# Required-Start:   $syslog
+# Required-Stop:    $syslog
+# Should-Start:     $local_fs
+# Should-Stop:      $local_fs
+# Default-Start:    2 3 4 5
+# Default-Stop:     0 1 6
+# Short-Description:    bearybots-api - bearybots api service
+# Description:      bearybots-api - bearybots api service
+### END INIT INFO
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/opt/local/bin:$PATH
+
+AS_USER="deploy"
+
+APP_NAME="bearybots-api"
+APP_HOME="/var/www/bearybots"
+PID_DIR="/var/run/${APP_NAME}"
+LOG_DIR="/var/logs/${APP_NAME}"
+
+JVM_ARGS="-Xmx256m -XX:+UseCompressedOops"
+
+CLASSPATH=$APP_HOME/lib/*:$APP_HOME/lib/simple-web-service*.jar
+JAVA=`which java`
+
+JAVA_CONFIG="-Dfile.encoding=UTF-8 ${JVM_ARGS} -XX:+UseConcMarkSweepGC -XX:+UseCMSCompactAtFullCollection -XX:+CMSClassUnloadingEnabled -XX:CMSInitiatingOccupancyFraction=50 -XX:+CMSParallelRemarkEnabled -Dnetworkaddress.cache.ttl=300  -Djava.net.preferIPv4Stack=true -Dlog4j.configuration=file:${APP_HOME}/conf/log4j.properties -Dlog4j.logdir=${LOG_DIR} -cp $CLASSPATH simple-web-service.core"
+
+daemon_args="--name $APP_NAME --user $AS_USER --pidfile $PID_DIR/pid --stdout=$LOG_DIR/output.log --stderr=$LOG_DIR/error.log --chdir $APP_HOME"
+
+function running() {
+    daemon $daemon_args --running
+}
+
+function start_server() {
+    mkdir -p $PID_DIR
+    mkdir -p $LOG_DIR
+    chown -R $AS_USER $PID_DIR
+    chown -R $AS_USER $LOG_DIR
+
+    if running; then
+        echo "$APP_NAME already running."
+        exit 0
+    fi
+    echo "daemon $daemon_args -- $JAVA $JAVA_CONFIG"
+    ## source $APP_HOME/conf/config
+    daemon $daemon_args -- $JAVA $JAVA_CONFIG
+    if [ $? -eq 0 ] ; then
+        echo "Starting $APP_NAME"
+    else
+        echo "failed to starting $APP_NAME"
+    fi
+}
+
+case "$1" in
+    start)
+        start_server;
+        ;;
+    stop)
+        if ! running; then
+            echo "$APP_NAME not running."
+            exit 0
+        fi
+        count=1
+        while [ $count -le 5 ] && running;
+        do
+            echo "Stopping $APP_NAME $count times"
+            daemon $daemon_args --stop
+            (( count++ ))
+            sleep 2;
+        done
+        if running; then
+            echo "Tired, kill -9 $APP_NAME daemon `cat $PID_DIR/pid`"
+            kill -9 `cat $PID_DIR/pid`
+            pids=`ps aux | grep $MAIN_CLASS | grep -v daemon | grep -v grep | awk '{print $2}'`
+            echo "Kill  $MAIN_CLASS $pids"
+            ps aux | grep $MAIN_CLASS | grep -v daemon | grep -v grep | awk '{print $2}' | xargs kill -9
+            exit 0;
+        fi
+        ;;
+    status)
+        if running; then
+            echo "$APP_NAME running"
+        else
+            echo "$APP_NAME not running"
+        fi
+        ;;
+    restart|force-reload)
+        while running
+        do
+            $0 stop
+            sleep 1;
+        done
+        $0 start
+        ;;
+    *)
+        echo "Usage: /etc/init.d/$APP_NAME {start|status|stop|restart|force-reload}" >&2
+        exit 1
+        ;;
+esac
+
+exit 0
