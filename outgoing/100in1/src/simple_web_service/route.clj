@@ -7,6 +7,7 @@
             [simple-web-service.utils :refer [wrap-json-params]]
             [simple-web-service.handlers.wiki :as wiki]
             [simple-web-service.handlers.roll :as roll]
+            [simple-web-service.handlers.lottery :as lottery]
             [simple-web-service.handlers.giphy :as giphy]))
 
 (defroutes app-routes
@@ -15,6 +16,7 @@
   (POST "/roll" [] roll/roll)
   (POST "/rollv" [] roll/roll-with-n-dice)
   (POST "/giphy" [] giphy/giphy)
+  (POST "/lottery" [] lottery/lottery)
   (POST "/weakness" [] wiki/mh-wiki-handler))
 
 (def app (handler/site (-> app-routes
