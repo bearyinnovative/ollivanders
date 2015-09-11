@@ -66,21 +66,21 @@
     (success {:text "抽奖活动还没有开始，请稍等片刻"})))
 
 (defmethod process-lottery "add"
-  [action [username channel-name params]]
-  (let [users (cstr/split params #" ")]
+  [action [username channel-name args]]
+  (let [users (cstr/split args #" ")]
     (if (> (apply add-user username) 0)
       (success {:text "添加成功，可以通过 list 命令来查看"})
       (success {:text "已经添加过了，可以通过 list 命令来查看"}))))
 
 (defmethod process-lottery "del"
-  [action [username channel-name params]]
-  (let [users (cstr/split params #" ")]
+  [action [username channel-name args]]
+  (let [users (cstr/split args #" ")]
     (if (> (apply del-user users) 0)
       (success {:text "删除成功，可以通过 list 命令来查看"})
       (success {:text "已经删除过了，可以通过 list 命令来查看"}))))
 
 (defmethod process-lottery "list"
-  [action [username channel-name params]]
+  [action [username channel-name args]]
   (let [users (list-users)]
     (success {:text (format "总计有 %s 人: \r\n %s" (count users) (cstr/join "\r\n" users))})))
 
@@ -90,9 +90,9 @@
 
 (defn lottery
   [req]
-  (let [[username channel-name action params] (parse-params req)]
-    (println username channel-name action params)
+  (let [[username channel-name action args] (parse-params req)]
+    (println username channel-name action args)
     (if action
-      (process-lottery action [username channel-name params])
+      (process-lottery action [username channel-name args])
       (error-response))))
 
