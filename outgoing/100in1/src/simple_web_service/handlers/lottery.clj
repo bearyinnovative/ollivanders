@@ -67,17 +67,22 @@
 
 (defmethod process-lottery "add"
   [action [username channel-name args]]
-  (let [users (cstr/split args #" ")]
-    (if (> (apply add-user username) 0)
-      (success {:text "添加成功，可以通过 list 命令来查看"})
-      (success {:text "已经添加过了，可以通过 list 命令来查看"}))))
+  (if (= "vivian" username)
+    (let [users (cstr/split args #" ")]
+      (if (> (apply add-user users) 0)
+        (success {:text "添加成功，可以通过 list 命令来查看"})
+        (success {:text "已经添加过了，可以通过 list 命令来查看"})))
+    (success {:text "你是黑客哦，只有首席妹子才可以用这个命令"})))
+
 
 (defmethod process-lottery "del"
   [action [username channel-name args]]
-  (let [users (cstr/split args #" ")]
-    (if (> (apply del-user users) 0)
-      (success {:text "删除成功，可以通过 list 命令来查看"})
-      (success {:text "已经删除过了，可以通过 list 命令来查看"}))))
+  (if (= "vivian" username)
+    (let [users (cstr/split args #" ")]
+      (if (> (apply del-user users) 0)
+        (success {:text "删除成功，可以通过 list 命令来查看"})
+        (success {:text "已经删除过了，可以通过 list 命令来查看"})))
+    (success {:text "你是黑客哦，只有首席妹子才可以用这个命令"})))
 
 (defmethod process-lottery "list"
   [action [username channel-name args]]
