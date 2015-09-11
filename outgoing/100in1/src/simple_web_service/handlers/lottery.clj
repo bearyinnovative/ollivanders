@@ -31,7 +31,7 @@
         trigger-word (:trigger_word params)
         username (:user_name params)
         channel-name (:channel_name params)
-        [action args] (->> (cstr/replace text trigger-word "")
+        [action args] (-> (cstr/replace text trigger-word "")
                         cstr/trim
                         (cstr/split #" " 2))]
     [username channel-name action args]))
