@@ -51,7 +51,7 @@
     (let [users (list-users)]
       (loop [ret #{}]
         (let [u (rand-nth users)
-              ret (cons u ret)]
+              ret (conj ret u)]
           (if (>= (count ret) 3)
             (success {:text (format "最终获奖名单:\r\n%s" (cstr/join "\r\n" ret))})
             (recur ret)))))
