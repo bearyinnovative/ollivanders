@@ -48,15 +48,18 @@
 
 (defmethod process-lottery "end"
   [_ [username & -]]
-  (if (= "vivian" username)
-    (let [users (list-users)]
-      (loop [ret #{}]
-        (let [u (rand-nth users)
-              ret (conj ret u)]
-          (if (>= (count ret) 3)
-            (success {:text (format "最终获奖名单:\r\n%s" (cstr/join "\r\n" ret))})
-            (recur ret)))))
-    (success {:text "你是黑客哦，只有首席妹子才可以用这个命令"})))
+  (if @started
+    (if (= "vivian" username)
+      (reset! started false)
+      (let [users (list-users)]
+        (loop [ret #{}]
+          (let [u (rand-nth users)
+                ret (conj ret u)]
+            (if (>= (count ret) 3)
+              (success {:text (format "最终获奖名单:\r\n%s" (cstr/join "\r\n" ret))})
+              (recur ret)))))
+      (success {:text "你是黑客哦，只有首席妹子才可以用这个命令"}))
+    (success {:text "抽奖活动还没有开始，请稍等片刻"})))
 
 (defmethod process-lottery "gopher"
   [_ [username & _]]
