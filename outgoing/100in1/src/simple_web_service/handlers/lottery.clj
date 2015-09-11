@@ -31,9 +31,9 @@
         trigger-word (:trigger_word params)
         username (:user_name params)
         channel-name (:channel_name params)
-        [action args] (-> (cstr/replace text trigger-word "")
+        [action args] (->> (cstr/replace text trigger-word "")
                         cstr/trim
-                        (cstr/split content-str #" " 2))]
+                        (cstr/split #" " 2))]
     [username channel-name action args]))
 
 (defmulti process-lottery (fn [action params] action))
@@ -98,7 +98,7 @@
   [req]
   (let [[username channel-name action args] (parse-params req)]
     (println username channel-name action args)
-    (if (and action (cstr/blank? action))
+    (if (and action (not (cstr/blank? action)))
       (process-lottery action [username channel-name args])
       (error-response))))
 
