@@ -6,6 +6,7 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [ring/ring-core "1.2.2"]
                  [ring/ring-servlet "1.2.2"]
+                 [com.taoensso/carmine "2.6.2"]
                  [clj-http "0.9.2"]
                  [org.jsoup/jsoup "1.8.1"]
                  [org.clojure/data.json "0.2.5"]
