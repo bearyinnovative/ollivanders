@@ -7,6 +7,10 @@
 
 (defonce lottery-set-key "lottery:set")
 
+(defn- error-response
+  []
+  (success {:text "你是黑客，格式不对哦"}))
+
 (defn add-user
   ([name]
    (redis/sadd lottery-set-key name))
@@ -93,9 +97,10 @@
   (let [users (list-users)]
     (success {:text (format "总计有 %s 人: \r\n %s" (count users) (cstr/join "\r\n" users))})))
 
-(defn- error-response
-  []
-  (success {:text "你是黑客，格式不对哦"}))
+(defmethod process-lottery :default
+  [action _]
+  (println (format  "error action: %s" action))
+  (error-response))
 
 (defn lottery
   [req]
