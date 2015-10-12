@@ -84,7 +84,3 @@
         codec/url-encode
         (str/replace #"\." "%2E")
         (str/replace #"\+" "%2B"))))
-
-
-
-

@@ -1,15 +1,12 @@
 (ns simple-web-service.handlers.lottery
   (:require [simple-web-service.utils :as u :refer [success]]
-            [simple-web-service.redis :as redis])
+            [simple-web-service.redis :as redis]
+            [simple-web-service.handlers.helper :refer :all])
   (:require [clojure.string :as cstr]))
 
 (def started (atom false))
 
 (defonce lottery-set-key "lottery:set")
-
-(defn- error-response
-  []
-  (success {:text "你是黑客，格式不对哦"}))
 
 (defn add-user
   ([name]
@@ -27,19 +24,6 @@
   []
   (redis/smembers lottery-set-key))
 
-(defn- parse-params
-  [req]
-  (println req)
-  (let [params (:params req)
-        text (:text params)
-        trigger-word (:trigger_word params)
-        username (:user_name params)
-        channel-name (:channel_name params)
-        [action args] (-> (cstr/replace text trigger-word "")
-                        cstr/trim
-                        (cstr/split #" " 2))]
-    [username channel-name action args]))
-
 (defmulti process-lottery (fn [action params] action))
 
 (defmethod process-lottery "start"
@@ -52,15 +36,14 @@
 
 (defn- get-winners-from-users
   [users winner-cnt]
-  (let [winners (if (<= (count users)))]
-    (if (<= (count users) winner-cnt)
-      users
-      (loop [ret #{}]
-        (let [u (rand-nth users)
-              ret (conj ret u)]
-          (if (>= (count ret) winner-cnt)
-            ret
-            (recur ret)))))))
+  (if (<= (count users) winner-cnt)
+    users
+    (loop [ret #{}]
+      (let [u (rand-nth users)
+            ret (conj ret u)]
+        (if (>= (count ret) winner-cnt)
+          ret
+          (recur ret))))))
 
 (defmethod process-lottery "end"
   [_ [username & -]]
@@ -136,8 +119,7 @@
 
 (defn lottery
   [req]
-  (let [[username channel-name action args] (parse-params req)]
-    (println username channel-name action args)
+  (let [[username channel-name action args] (parse-outgoing-params req)]
     (if (and action (not (cstr/blank? action)))
       (process-lottery action [username channel-name args])
       (error-response))))
