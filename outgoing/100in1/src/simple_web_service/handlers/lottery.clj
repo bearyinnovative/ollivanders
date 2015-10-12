@@ -52,15 +52,14 @@
 
 (defn- get-winners-from-users
   [users winner-cnt]
-  (let [winners (if (<= (count users)))]
-    (if (<= (count users) winner-cnt)
-      users
-      (loop [ret #{}]
-        (let [u (rand-nth users)
-              ret (conj ret u)]
-          (if (>= (count ret) winner-cnt)
-            ret
-            (recur ret)))))))
+  (if (<= (count users) winner-cnt)
+    users
+    (loop [ret #{}]
+      (let [u (rand-nth users)
+            ret (conj ret u)]
+        (if (>= (count ret) winner-cnt)
+          ret
+          (recur ret))))))
 
 (defmethod process-lottery "end"
   [_ [username & -]]
