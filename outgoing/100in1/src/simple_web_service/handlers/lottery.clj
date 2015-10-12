@@ -119,7 +119,7 @@
 
 (defn lottery
   [req]
-  (let [[username channel-name action args] (parse-outgoing-params req)]
+  (let [[username channel-name subdomain action args] (parse-outgoing-params req)]
     (if (and action (not (cstr/blank? action)))
       (process-lottery action [username channel-name args])
       (error-response))))
