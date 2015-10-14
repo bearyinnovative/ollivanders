@@ -56,14 +56,14 @@
 
 (defmulti process-scrum (fn [action params] action))
 
-(defmethod process-scrum "s"
-  [action [username subdomain channel-name args]]
+(defmethod process-scrum "start"
+  [action [_ username subdomain channel-name args]]
   (if (is-admin? username)
     (success {:text "请大家在 #bearybot 对话里面写一下昨天的工作, /scrum r {这里填写工作内容, 一行}"})
     (error-response (str "只有管理员才可以操作"))))
 
 (defmethod process-scrum "end"
-  [action [username subdomain channel-name args]]
+  [action [_ username subdomain channel-name args]]
   (if (is-admin? username)
     (let [today-str (get-today-str)
           team-report-key (gen-team-report-key subdomain)
@@ -73,7 +73,7 @@
     (error-response (str "只有管理员才可以操作"))))
 
 (defmethod process-scrum "ma"
-  [action [username subdomain channel-name args]]
+  [action [_ username subdomain channel-name args]]
   (if (is-admin? username)
     (let [team-member-key (gen-team-member-key subdomain)]
       (apply redis/sadd team-member-key (get-members args))
@@ -81,7 +81,7 @@
     (error-response (str "只有管理员才可以操作"))))
 
 (defmethod process-scrum "ml"
-  [action [username subdomain channel-name args]]
+  [action [_ username subdomain channel-name args]]
   (if (is-admin? username)
     (let [team-member-key (gen-team-member-key subdomain)
           members (redis/smembers team-member-key)]
@@ -89,8 +89,8 @@
                            (cstr/join "\n" members))}))
     (error-response (str "只有管理员才可以操作"))))
 
-(defmethod process-scrum "r"
-  [action [username subdomain channel-name args]]
+(defmethod process-scrum "write"
+  [action [_ username subdomain channel-name args]]
   (if (nil? channel-name)
     (locking o
       (let [today-str (get-today-str)
@@ -106,21 +106,21 @@
     (error-response "只能在 #bearybot 里面进行晨会记录")))
 
 (defmethod process-scrum "help"
-  [action [username subdomain channel-name args]]
-  (let [common-parts (str "/scrum r {I did...} -- 写晨报;\n"
-                          "/scrum help         -- 帮助文档;\n")]
+  [action [trigger-word username subdomain channel-name args]]
+  (let [common-parts (str trigger-word " write {I did...} -- 写晨报;\n"
+                          trigger-word " help         -- 帮助文档;\n")]
     (if (is-admin? username)
-      (success {:text (str "/scrum s            -- 开始晨报流程;\n"
-                           "/scrum e            -- 总结晨报;\n"
-                           "/scrum ma {a b ...} -- 加入成员;\n"
-                           "/scrum md {a b ...} -- 移除成员;\n"
-                           "/scrum ml           -- 显示成员列表;\n"
+      (success {:text (str trigger-word " start        -- 开始晨报流程;\n"
+                           trigger-word " report       -- 总结晨报;\n"
+                           trigger-word " ma {a b ...} -- 加入成员;\n"
+                           trigger-word " md {a b ...} -- 移除成员;\n"
+                           trigger-word " ml           -- 显示成员列表;\n"
                            common-parts)})
       (success {:text common-parts}))))
 
 (defn scrum
   [req]
-  (let [[username subdomain channel-name action args] (parse-outgoing-params req)]
+  (let [[trigger-word username subdomain channel-name action args] (parse-outgoing-params req)]
     (if (and action (not (cstr/blank? action)))
-      (process-scrum action [username subdomain channel-name args])
+      (process-scrum action [trigger-word username subdomain channel-name args])
       (error-response))))

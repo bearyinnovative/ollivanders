@@ -13,7 +13,7 @@
         [action args] (-> (cstr/replace text trigger-word "")
                         cstr/trim
                         (cstr/split #" " 2))]
-    [username subdomain channel-name action args]))
+    [trigger-word username subdomain channel-name action args]))
 
 (defn error-response
   ([]
