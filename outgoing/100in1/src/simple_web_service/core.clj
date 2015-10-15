@@ -7,5 +7,5 @@
   "I don't do a whole lot ... yet."
   [& args]
   (println "Start Simple Web Service")
-  (run-jetty app {:port 30000
+  (run-jetty app {:port 8888
                   :max-threads 20}))

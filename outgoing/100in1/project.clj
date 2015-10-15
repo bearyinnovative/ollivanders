@@ -8,10 +8,13 @@
                  [ring/ring-servlet "1.2.2"]
                  [com.taoensso/carmine "2.6.2"]
                  [clj-http "0.9.2"]
+                 [clj-time "0.8.0"]
                  [org.jsoup/jsoup "1.8.1"]
                  [org.clojure/data.json "0.2.5"]
                  [compojure "1.1.8"]
                  [ring/ring-jetty-adapter "1.2.1"]]
   :main simple-web-service.core
-  :plugins [[lein-libdir "0.1.1"]]
+  :plugins [[lein-libdir "0.1.1"]
+            [lein-ring "0.9.7"]]
+  :ring {:handler simple-web-service.route/app}
   :target-path "target/%s")
