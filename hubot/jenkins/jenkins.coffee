@@ -18,10 +18,6 @@
 #   hubot jenkins describe <job> - Describes the specified Jenkins job
 #   hubot jenkins last <job> - Details about the last build for the specified Jenkins job
 
-#
-# Author:
-#   dougcole
-
 querystring = require 'querystring'
 
 # Holds a list of jobs, so we can trigger them with a number

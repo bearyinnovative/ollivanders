@@ -6,7 +6,7 @@
 
 module.exports = (robot) ->
 
-  # replace your key
+  # replace your key and user_id
   robot.respond /ask (.+)/i, (res) ->
     info= res.match[1]
     url = "http://apis.baidu.com/turing/turing/turing?key=YOUR_KEY&userid=YOUR_USER_ID&info=#{info}"
