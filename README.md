@@ -10,7 +10,7 @@ BearyChat 机器主要分为两大类 Incoming 和 Outgoing：
 1. Incoming 类机器人是外部往 BearyChat 发送消息，适合于外部通知，比如告警信息，也可以适用于各种定时脚本每日报表之类的需求。
 2. Outgoing 类机器人是把触发了关键词的 BearyChat 消息发送到外部，并将结果返回或不返回。适用于查询信息，或者是对外部服务进行操作。
 
-具体的设置的细节可以看这里参考 [创造你的 BearyChat 机器人](http://bearyinnovative.com/customize-bearychat-robots/)
+具体的设置的细节可以看这里参考 [创造你的 BearyChat 机器人](http://bearyinnovative.com/incoming-and-outgoing/)
 
 
 _BearyChat 的内部项目命名也全部来自《Harry Potter》系列_
