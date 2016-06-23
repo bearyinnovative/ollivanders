@@ -1,3 +1,6 @@
+# Doc
+#   https://pixabay.com/api/docs
+#
 # Commands:
 #   hubot photo xxx - show you some photo you may interest
 
@@ -16,9 +19,8 @@ module.exports = (robot) ->
            {totalHits, hits} = JSON.parse body
            if totalHits? and totalHits > 0 and hits? and hits.length > 0
              one = hits[Math.floor(Math.random() * hits.length)]
-             tags = one.tags
-             webformatURL = one.webformatURL
-             attachments = [{images: [{url: webformatURL}]}]
-             res.send tags, attachments
+             text = one.tags
+             attachments = [{images: [{url: one.webformatURL}]}]
+             res.send text, attachments
            else
              res.reply "sorry, empty result -_-"
